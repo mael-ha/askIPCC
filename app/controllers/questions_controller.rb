@@ -3,8 +3,10 @@ class QuestionsController < ApplicationController
 
   def create
     question = Question.create!(question_params)
-    answer = LangchainService.new.ask(question:)
-    render json: { type: 'answer', content: answer.content }
+    Async do
+      LangchainService.new.ask(question:)
+    end
+    head :ok
   end
 
   def question_params

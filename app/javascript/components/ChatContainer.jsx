@@ -1,34 +1,60 @@
-import React, { useState } from 'react';
-import UserInput from './UserInput';
-import MessagesContainer from './MessagesContainer';
+import React, { useState, useEffect } from "react";
+import UserInput from "./UserInput";
+import MessagesContainer from "./MessagesContainer";
 
+function ChatContainer({ cable }) {
+  const system_question = {
+    content: "Hi, how can I help you?",
+  };
+  const [question, setQuestion] = useState(null);
+  const [answer, setAnswer] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isReceiving, setIsReceiving] = useState(false);
 
-const ChatContainer = () => {
-    const system_question = { type: 'question', content: 'What is your question?' };
-    const [question, setQuestion] = useState(null);
-    const [answer, setAnswer] = useState(null);
-    const messages = [system_question, question, answer].filter((message) => message !== null);
-    const submitQuestion = async (content) => {
-        console.log(content);
-        setQuestion({ type: 'question', content: content });
-        const response = await fetch('/questions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ question: {content: content} }) // Assuming 1 as the book id
-        });
+  const messages = [system_question, question, answer].filter(
+    (message) => message !== null
+  );
 
-        const data = await response.json();
-        setAnswer({ type: data.type, content: data.content });
+  useEffect(() => {
+    const subscription = cable.subscriptions.create("AnswersChannel", {
+      received(data) {
+        setIsReceiving(false);
+        setAnswer({ content: data.content });
+        if (data.streamStopped) {
+          setIsSubmitting(false);
+        }
+      },
+    });
+    return () => {
+      cable.subscriptions.remove(subscription);
     };
+  }, []);
 
-    return (
-        <div>
-            <MessagesContainer messages={messages} />
-            <UserInput onSubmit={submitQuestion} />
-        </div>
-    );
-};
+  const submitQuestion = async (content) => {
+    setIsSubmitting(true);
+    setIsReceiving(true);
+    setQuestion({ type: "question", content: content });
+    setAnswer(null);
+    const response = await fetch("/questions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ question: { content: content } }),
+    });
+    if (response.ok) {
+    }
+  };
+
+  return (
+    <div>
+      <MessagesContainer isLoading={isReceiving} messages={messages} />
+      <UserInput
+        onSubmit={submitQuestion}
+        isDisabled={isSubmitting || isReceiving}
+      />
+    </div>
+  );
+}
 
 export default ChatContainer;

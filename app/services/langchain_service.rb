@@ -14,18 +14,23 @@ class LangchainService
       chunk_size:,
       chunk_overlap:
     )
+    @openai = OpenAI::Client.new(access_token: ENV['OPENAI_API_KEY'])
   end
 
   # get answer from LLM using context from vector search
   def ask(question:, number_of_results: 6)
     context = get_context(question: question.content, number_of_results:)
-    prompt = @vector_search_client.generate_prompt(question:, context:)
-    answer_content = @llm_client.chat(prompt:)
+    prompt = @vector_search_client.generate_prompt(question: question.content, context:)
 
+    content = ''
+    @llm_client.chat(prompt:, stream: true) do |new_content|
+      content += new_content if new_content
+      ActionCable.server.broadcast('AnswersChannel', { content:, streamStopped: new_content ? false : true })
+    end
     Answer.create!(
       question:,
       context:,
-      content: answer_content
+      content:
     )
   end
 
@@ -42,7 +47,6 @@ class LangchainService
 
     data = File.open(path).read
     pages = parse(data)
-    n = 1
 
     vectors_count = create_vectors_and_upload(pages)
     finish = Time.current
@@ -79,8 +83,4 @@ class LangchainService
     end
     context.join("\n---\n")
   end
-
-  def set_llm; end
-
-  def set_splitter; end
 end
