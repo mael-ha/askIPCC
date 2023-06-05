@@ -58,8 +58,10 @@ class LangchainService
   def parse(data)
     reader = ::PDF::Reader.new(StringIO.new(data))
     puts "- Parsing data: #{reader.pages.size} pages..."
+    n = 0
     reader.pages.map do |page|
       # return an array of texts from the page
+      next if page.text.size < 100
       @splitter.chunks(page.text).map { _1[:text] }
     end
   end
