@@ -109,6 +109,8 @@ GEM
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
+    dockerfile-rails (1.4.1)
+      rails
     dotenv (2.8.1)
     dotenv-rails (2.8.1)
       dotenv (= 2.8.1)
@@ -208,6 +210,8 @@ GEM
     nio4r (2.5.9)
     nokogiri (1.15.2-x86_64-darwin)
       racc (~> 1.4)
+    nokogiri (1.15.2-x86_64-linux)
+      racc (~> 1.4)
     pdf-reader (2.11.0)
       Ascii85 (~> 1.0)
       afm (~> 0.2.1)
@@ -288,6 +292,7 @@ GEM
       railties (>= 6.0.0)
     thor (1.2.2)
     tiktoken_ruby (0.0.5-x86_64-darwin)
+    tiktoken_ruby (0.0.5-x86_64-linux)
     timeout (0.3.2)
     timers (4.3.5)
     ttfunk (1.7.0)
@@ -316,6 +321,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   async
@@ -325,6 +331,7 @@ DEPENDENCIES
   capybara
   cssbundling-rails
   debug
+  dockerfile-rails (>= 1.4)
   dotenv-rails
   jbuilder
   jsbundling-rails
