@@ -11,14 +11,22 @@ function UserInput({ isDisabled, onSubmit }) {
   };
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form
+      className="flex items-center justify-center w-full bg-black border border-gray-800 rounded-lg"
+      onSubmit={handleFormSubmit}
+    >
       <input
+        className="px-2 font-light bg-black focus:outline-none focus:ring-none grow"
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
-      <button disabled={isDisabled} type="submit">
-        Ask
+      <button
+        className="px-4 py-2 rounded-r-lg hover:bg-gray-800"
+        disabled={isDisabled}
+        type="submit"
+      >
+        ⤴
       </button>
     </form>
   );
