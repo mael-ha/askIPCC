@@ -12,7 +12,11 @@ function MessagesContainer({ isLoading, messages }) {
           lastMessage={index + 1 == messages.length}
         />
       ))}
-      {isLoading && <p className="flex items-center justify-center w-8 h-8 text-xl animate-spin">🌏</p>}
+      {isLoading && (
+        <p className="flex items-center justify-center text-sm animate-ping">
+          🔵
+        </p>
+      )}
     </div>
   );
 }

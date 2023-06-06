@@ -22,7 +22,7 @@ function UserInput({ isDisabled, onSubmit }) {
         onChange={(e) => setInputValue(e.target.value)}
       />
       <button
-        className="px-4 py-2 rounded-r-lg hover:bg-gray-800"
+        className="px-4 py-2 rounded-r-lg cursor-pointer hover:bg-gray-800"
         disabled={isDisabled}
         type="submit"
       >
