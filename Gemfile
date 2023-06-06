@@ -51,6 +51,7 @@ gem "dotenv-rails"
 gem "pdf-reader"
 gem 'baran'
 gem 'async'
+gem 'combine_pdf'
 # Use Sass to process CSS
 # gem "sassc-rails"
 

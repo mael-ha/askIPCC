@@ -2,7 +2,7 @@ require 'langchain'
 require 'baran'
 
 class LangchainService
-  def initialize(index_name: 'testipcc', chunk_size: 1024, chunk_overlap: 64)
+  def initialize(index_name: 'marx', chunk_size: 1024, chunk_overlap: 64)
     @llm_client = Langchain::LLM::OpenAI.new(api_key: ENV['OPENAI_API_KEY'])
     @vector_search_client = Langchain::Vectorsearch::Pinecone.new(
       environment: ENV['PINECONE_ENVIRONMENT'],
@@ -57,7 +57,7 @@ class LangchainService
 
   def parse(data)
     reader = ::PDF::Reader.new(StringIO.new(data))
-    puts "- Parsing data: #{reader.pages.size} pages..."
+    puts "  - Parsing data: #{reader.pages.size} pages..."
     n = 1
     reader.pages.map do |page|
       # return an array of texts from the page
@@ -71,12 +71,12 @@ class LangchainService
   end
 
   def create_vectors_and_upload(pages)
-    puts '- Adding data to vector search index...'
+    puts '  - Adding data to vector search index...'
     vectors = 0
     pages.each_with_index do |page_chunks, index|
       @vector_search_client.add_texts(texts: page_chunks)
       vectors += page_chunks.size
-      puts "  - pages #{index + 1}, #{page_chunks.size} vectors | total: #{vectors} vectors"
+      puts "   - pages #{index + 1}, #{page_chunks.size} vectors | total: #{vectors} vectors"
     end
     vectors
   end
