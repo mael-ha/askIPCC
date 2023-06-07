@@ -74,6 +74,7 @@ class LangchainService
     puts '  - Adding data to vector search index...'
     vectors = 0
     pages.each_with_index do |page_chunks, index|
+      next if page_chunks.nil?
       @vector_search_client.add_texts(texts: page_chunks)
       vectors += page_chunks.size
       puts "   - pages #{index + 1}, #{page_chunks.size} vectors | total: #{vectors} vectors"
